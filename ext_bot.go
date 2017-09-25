@@ -198,6 +198,32 @@ func (b *Bot) EditMessageText(message Message, text string, options *SendOptions
 	return nil
 }
 
+func (b *Bot) DeleteMessage(message Message) error {
+	params := map[string]string{
+		"chat_id":    strconv.FormatInt(message.Chat.ID, 10),
+		"message_id": strconv.Itoa(message.ID),
+	}
+	responseJSON, err := sendCommand("deleteMessage", b.Token, params)
+	if err != nil {
+		return err
+	}
+
+	var responseRecieved struct {
+		Ok          bool
+		Description string
+	}
+
+	err = json.Unmarshal(responseJSON, &responseRecieved)
+	if err != nil {
+		return err
+	}
+
+	if !responseRecieved.Ok {
+		return fmt.Errorf("telebot: %s", responseRecieved.Description)
+	}
+
+	return nil
+}
 
 // SendPhoto sends a photo object to recipient.
 //
