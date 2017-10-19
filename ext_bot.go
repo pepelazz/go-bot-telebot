@@ -99,6 +99,12 @@ type MsgResult struct {
 	Message_id int
 }
 
+type BotInfo struct {
+	Id int64 `json:"id"`
+	FirstName string `json:"first_name"`
+	Username string `json:"username"`
+}
+
 // SendMessage sends a text message to recipient.
 func (b *Bot) SendMessage(recipient Recipient, message string, options *SendOptions) (result *MsgResult, Error error) {
 	params := map[string]string{
@@ -825,3 +831,32 @@ func (b *Bot) SendPhotoAsLink(recipient Recipient, photoUrl string, options *Sen
 	return nil
 }
 
+func (b *Bot) GetMe() (*BotInfo, error){
+	var responseJSON []byte
+	var err error
+
+	responseJSON, err = sendCommand("getMe", b.Token, nil)
+
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf("responseJSON %s\n", responseJSON)
+
+	var responseRecieved struct {
+		Ok          bool
+		Description string
+		Result      BotInfo
+	}
+
+	err = json.Unmarshal(responseJSON, &responseRecieved)
+	if err != nil {
+		return nil, err
+	}
+
+	if !responseRecieved.Ok {
+		return nil, fmt.Errorf("telebot: %s", responseRecieved.Description)
+	}
+
+	return &responseRecieved.Result, nil
+}
