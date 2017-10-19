@@ -831,6 +831,44 @@ func (b *Bot) SendPhotoAsLink(recipient Recipient, photoUrl string, options *Sen
 	return nil
 }
 
+// SendPhoto sends a photo object to recipient.
+func (b *Bot) SendVideoAsLink(recipient Recipient, videoUrl string, options *SendOptions) error {
+	params := map[string]string{
+		"chat_id": recipient.Destination(),
+	}
+
+	if options != nil {
+		embedSendOptions(params, options)
+	}
+
+	var responseJSON []byte
+	var err error
+
+	params["video"] = videoUrl
+	responseJSON, err = sendCommand("sendVideo", b.Token, params)
+
+	if err != nil {
+		return err
+	}
+
+	var responseRecieved struct {
+		Ok          bool
+		Result      Message
+		Description string
+	}
+
+	err = json.Unmarshal(responseJSON, &responseRecieved)
+	if err != nil {
+		return err
+	}
+
+	if !responseRecieved.Ok {
+		return fmt.Errorf("telebot: %s", responseRecieved.Description)
+	}
+
+	return nil
+}
+
 func (b *Bot) GetMe() (*BotInfo, error){
 	var responseJSON []byte
 	var err error
@@ -840,8 +878,6 @@ func (b *Bot) GetMe() (*BotInfo, error){
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Printf("responseJSON %s\n", responseJSON)
 
 	var responseRecieved struct {
 		Ok          bool
