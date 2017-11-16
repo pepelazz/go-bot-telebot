@@ -50,17 +50,17 @@ func (b *Bot) Start(timeout time.Duration) {
 }
 
 func (b *Bot) poll(
-messages chan Message,
-queries chan Query,
-callbacks chan Callback,
-timeout time.Duration,
+	messages chan Message,
+	queries chan Query,
+	callbacks chan Callback,
+	timeout time.Duration,
 ) {
 	latestUpdate := 0
 
 	for {
 		updates, err := getUpdates(b.Token,
-			latestUpdate + 1,
-			int(timeout / time.Second),
+			latestUpdate+1,
+			int(timeout/time.Second),
 		)
 
 		if err != nil {
@@ -100,9 +100,9 @@ type MsgResult struct {
 }
 
 type BotInfo struct {
-	Id int64 `json:"id"`
+	Id        int64  `json:"id"`
 	FirstName string `json:"first_name"`
-	Username string `json:"username"`
+	Username  string `json:"username"`
 }
 
 // SendMessage sends a text message to recipient.
@@ -168,7 +168,6 @@ func (b *Bot) ForwardMessage(recipient Recipient, message Message) error {
 
 	return nil
 }
-
 
 // EditMessage sends a text message to recipient.
 func (b *Bot) EditMessageText(message Message, text string, options *SendOptions) error {
@@ -286,7 +285,7 @@ func (b *Bot) SendPhoto(recipient Recipient, photo *Photo, options *SendOptions)
 
 	thumbnails := &responseRecieved.Result.Photo
 	filename := photo.filename
-	photo.File = (*thumbnails)[len(*thumbnails) - 1].File
+	photo.File = (*thumbnails)[len(*thumbnails)-1].File
 	photo.filename = filename
 
 	return nil
@@ -723,10 +722,10 @@ func (b *Bot) GetUserProfilePhotos(userId string) (*[]UserProfilePhoto, error) {
 	}
 
 	var responseRecieved struct {
-		Ok          bool
-		Result      struct {
-				    Photos [][]UserProfilePhoto
-			    }
+		Ok bool
+		Result struct {
+			Photos [][]UserProfilePhoto
+		}
 		Description string
 	}
 
@@ -764,12 +763,12 @@ func (b *Bot) GetFile(fileId string) (*File, error) {
 	}
 
 	var responseRecieved struct {
-		Ok          bool
-		Result      struct {
-				    FileId   string `json:"file_id"`
-				    FileSize int `json:"file_size"`
-				    FilePath string `json:"file_path"`
-			    }
+		Ok bool
+		Result struct {
+			FileId   string `json:"file_id"`
+			FileSize int    `json:"file_size"`
+			FilePath string `json:"file_path"`
+		}
 		Description string
 	}
 
@@ -783,7 +782,7 @@ func (b *Bot) GetFile(fileId string) (*File, error) {
 	}
 
 	file := File{
-		FileID: responseRecieved.Result.FileId,
+		FileID:   responseRecieved.Result.FileId,
 		FileSize: responseRecieved.Result.FileSize,
 		filename: responseRecieved.Result.FilePath,
 	}
@@ -869,7 +868,7 @@ func (b *Bot) SendVideoAsLink(recipient Recipient, videoUrl string, options *Sen
 	return nil
 }
 
-func (b *Bot) GetMe() (*BotInfo, error){
+func (b *Bot) GetMe() (*BotInfo, error) {
 	var responseJSON []byte
 	var err error
 

@@ -33,6 +33,9 @@ type Message struct {
 	// For a text message, the actual UTF-8 text of the message
 	Text string `json:"text"`
 
+	// Caption for the audio, document, photo, video or voice, 0-200 characters
+	Caption string `json:"caption"`
+
 	// For an audio recording, information about it.
 	Audio Audio `json:"audio"`
 
@@ -134,7 +137,11 @@ type Message struct {
 	// Sender would lead to creator of the migration.
 	MigrateFrom int64 `json:"migrate_from_chat_id"`
 
+	// For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text
 	Entities []MessageEntity `json:"entities",omitempty`
+
+	// For messages with a caption, special entities like usernames, URLs, bot commands, etc. that appear in the caption
+	CaptionEntities []MessageEntity `json:"caption_entities",omitempty`
 }
 
 // Origin returns an origin of message: group chat / personal.

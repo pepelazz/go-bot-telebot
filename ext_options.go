@@ -44,7 +44,7 @@ type ReplyMarkup struct {
 	// CustomKeyboard is Array of button rows, each represented by an Array of Strings.
 	//
 	// Note: you don't need to set HideCustomKeyboard field to show custom keyboard.
-	CustomKeyboard [][]string `json:"keyboard,omitempty"`
+	CustomKeyboard [][]SimpleKeyboardButton `json:"keyboard,omitempty"`
 
 	InlineKeyboard [][]KeyboardButton `json:"inline_keyboard,omitempty"`
 
@@ -69,4 +69,10 @@ type ReplyMarkup struct {
 	// 2) If the bot's message is a reply (has SendOptions.ReplyTo),
 	//       sender of the original message.
 	Selective bool `json:"selective,omitempty"`
+}
+
+type SimpleKeyboardButton struct {
+	Text            string `json:"text"`
+	RequestContact  bool   `json:"request_contact, omitempty"`
+	RequestLocation bool   `json:"request_location, omitempty"`
 }
