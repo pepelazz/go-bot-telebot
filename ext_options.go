@@ -68,7 +68,10 @@ type ReplyMarkup struct {
 	// 1) Users that are @mentioned in the text of the Message object;
 	// 2) If the bot's message is a reply (has SendOptions.ReplyTo),
 	//       sender of the original message.
-	Selective bool `json:"selective,omitempty"`
+	Selective      bool `json:"selective,omitempty"`
+
+	// Telegram clients will remove the current custom keyboard and display the default letter-keyboard
+	RemoveKeyboard bool `json:"remove_keyboard,omitempty"`
 }
 
 type SimpleKeyboardButton struct {
